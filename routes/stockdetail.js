@@ -3,54 +3,36 @@ var router = express.Router();
 
 var User = require('../models/user');
 var Stock = require('../models/stocks')
+var Advisor = require('../models/advisor')
 
 router.get('/:symbol', function(req, res, next){
 
 	if(req.session.loggedin) {
-
-		res.render('stockdetail', {symbol: req.params.symbol, username: req.session.username});
-
-	} else {
-		res.redirect('/users/login');
-	}
-
-});
-
-router.post('/', function(req, res, next){
-
-	if(req.session.loggedin && req.body.symbol) {
-
-		Stock.find({symbol: req.body.symbol}).exec(function(err, results){
-			if(results.length == 0)
-				next(new Error('Symbol not exists'));
-			else {
-				if(req.session.user.interests.indexOf(req.body.symbol) == -1) {
-					req.session.user.interests.push(req.body.symbol);
-
-					User.updateOne({username: req.session.username}, {interests: req.session.user.interests}, function(err, user){
-						if(err) {
-							next(err);
-							return;
-						}
-						req.session.user = user;
-						res.redirect('/stockdetail/' + req.body.symbol);
-					})
-
-				} else {
-					res.send('Forbidden');
-				}
-
-
-				
-
-
-			}
-		})
+		if(req.session.priority == 1) {
+			res.render('stockdetail_advisor', {symbol: req.params.symbol, username: req.session.username});
+		}
+		else {
+			res.render('stockdetail', {symbol: req.params.symbol, username: req.session.username});
+		}
+		
 
 	} else {
 		res.redirect('/users/login');
 	}
-
 });
 
+router.post('/:symbol', function(req, res, next){
+  if(req.session.username && req.body.subtitle && req.body.description) {
+  	var currentUnixTime = Date.now();
+    Advisor.create({advisorname: req.session.username, symbol: req.params.symbol, subtitle: req.body.subtitle, description: req.body.description, time: currentUnixTime}, function(err, advisor){
+      if(err) {
+        next(err);
+        return;
+      }
+      res.render('stockdetail_advisor', {symbol: req.params.symbol, username: req.session.username});
+    });
+
+  }
+  else{res.send('Forbidden');console.log(req.body.subtitle);console.log(req.body.description)}
+});
 module.exports = router;

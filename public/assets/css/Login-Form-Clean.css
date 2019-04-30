@@ -82,6 +82,9 @@ section {
   padding-top: 20px;
 }
 
+section {
+  padding-top: 20px;
+}
 
 .section-heading {
   padding-top: 20px;
@@ -98,7 +101,7 @@ textarea {
 }
 
 .card-text {
-  height: 100px;
+  height: 150px;
 }
 
 .section {

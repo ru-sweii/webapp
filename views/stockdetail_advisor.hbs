@@ -112,6 +112,27 @@
                 </div>
             </div>
         </section>
+        <section id="add" class="p-0">
+            <div class="container">
+                <h3 class="section-heading">Add your suggestion</h3>
+                <div class="row">
+                    <div class="col">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card">
+                            <form method='POST'>
+                            <div class="card-body">
+                                <h4 class="card-title" name="username">{{ username }}</h4>
+                                <input type="text"class="text-muted card-subtitle mb-2" name="subtitle"></input>
+                                <div class="form-group"><textarea name="description"></textarea></div><button class="btn btn-primary" type="submit">Submit</button>
+                                <div></div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
     <div class="footer-clean">
         <footer>
@@ -174,9 +195,8 @@
                 
                 <script src="/javascripts/api.js"></script>
                 <script type="text/javascript" src="/javascripts/stockdetailpage.js"></script>
-
                 <script type="text/javascript">
-                    $(window).on('load', function() {
+                $(window).on('load', function() {
                         drawChart("{{ symbol }}");
 
                         get_stock_prediction("{{ symbol }}", function(results){
@@ -213,8 +233,7 @@
 
                     });
 
-                </script>
+    </script>
 </body>
 
 </html>
-

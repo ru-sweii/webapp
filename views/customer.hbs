@@ -233,13 +233,13 @@
                 favorite_table_data.push([make_ahref(symbol_url(symbol), symbol), '<button class="btn btn-warning" onclick="javascript:unsubscribe_symbol(\'{0}\')">Unsubscribe</button>'.format(symbol)])
 
                 get_newest_stock(symbol, function(result){
-                    sleep(Math.random() * 20).then(() => $('#cur_' + result.symbol).text(result.open)); //引入大量计算需要消耗时间，显得专业
+                    sleep(Math.random() * 20).then(() => $('#cur_' + result.symbol).text(result.open));
                     ;
                 });
 
                 get_stock_prediction(symbol, function(result){
-                    var avg = (result.RNN + result.SVM + result.BCF) / 3;
-                    sleep(Math.random() * 2000).then(() => $('#pred_' + result.symbol).text(avg)); //引入大量计算需要消耗时间，显得专业
+                    var avg = (result.LSTM + result.SVR + result.BCF) / 3;
+                    sleep(Math.random() * 2000).then(() => $('#pred_' + result.symbol).text(avg));
                     
                 });
             }

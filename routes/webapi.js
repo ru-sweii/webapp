@@ -3,6 +3,8 @@ var router = express.Router();
 
 var stocks = require('../models/stocks');
 var user = require('../models/user');
+var advisor = require('../models/advisor');
+var predstocks = require('../models/predstocks');
 
 router.post('/', function(req, res, next) {
 	var err = new Error('Not authorized');
@@ -95,7 +97,7 @@ function w_avg(w, a, b) {return w * a + (1 - w) * b;}
 
 router.get('/stockprediction', function(req, res, next){
 	if(req.session.loggedin && req.query.symbol) {
-		var query = stocks.findOne({symbol: req.query.symbol}).sort({timestamp: -1});
+		var query = predstocks.find({symbol: req.query.symbol});
 		query.exec(function(err, result){
 			if(err){
 				 next(err);
@@ -106,13 +108,14 @@ router.get('/stockprediction', function(req, res, next){
 				return;
 			}
 
+			res_result = {'symbol': req.query.symbol}
+
+			for (var i = 0; i < result.length; i++) {
+				res_result[result[i].method] = result[i].result;
+			}
+
 			res.setHeader('Content-Type', 'application/json');
-	        res.send({
-	        	'symbol': result.symbol,
-	        	'BCF': w_avg(0.1, result.open, result.close), //value = 0.1 * open + 0.9 * close
-	        	'RNN': w_avg(0.5, result.open, result.close),
-	        	'SVM': w_avg(0.9, result.open, result.close)
-	        });
+	        res.send(res_result);
 		});
 
 	} else {
@@ -209,4 +212,19 @@ router.post('/unsubscribestock', function(req, res, next){
 	}
 });
 
+router.get('/showcomment', function(req, res, next){
+	if(req.session.loggedin && req.query.symbol) {
+		var query = advisor.find({symbol: req.query.symbol}).sort({'time': -1}).limit(3);
+		query.exec(function(err, results){
+
+	  	if(err) next(err);
+	        res.setHeader('Content-Type', 'application/json');
+	        res.send(JSON.parse(JSON.stringify(results)));
+	    });
+	} else {
+		var err = new Error('Not authorized');
+		err.status = 401;
+		next(err);
+	}
+});
 module.exports = router;

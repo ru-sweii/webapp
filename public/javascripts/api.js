@@ -33,6 +33,19 @@ function obtain_symbol_list(callback) {
 	});
 }
 
+// obtain advisor list
+function obtain_advisor_list(symbol, callback) {
+	$.get({
+      url: "/api/showcomment",
+      	data: {
+	    symbol: symbol
+	  },
+	  success: function( result ) {
+		callback(result);
+	  }
+	});
+}
+
 function get_userlist(callback) {
 	$.get({
 	  url: "/api/userlist",
