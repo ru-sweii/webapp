@@ -10,6 +10,7 @@ var usersRouter = require('./routes/users');
 var homeRouter = require('./routes/dashboard');
 var apiRouter = require('./routes/webapi');
 var stockRouter = require('./routes/stockdetail');
+var squeryRouter = require('./routes/squery');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/web568', { useNewUrlParser: true });
@@ -35,6 +36,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/dashboard', homeRouter);
 app.use('/api', apiRouter);
+app.use('/sapi', squeryRouter);
 app.use('/stockdetail', stockRouter);
 
 // catch 404 and forward to error handler
